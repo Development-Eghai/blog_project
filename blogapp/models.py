@@ -4,8 +4,8 @@ from django.db import models
 class TeamsPost(models.Model):
     name = models.CharField(max_length=255)
     image = models.ImageField(upload_to='uploads/')
-    content1 = models.TextField()
-    content2 = models.TextField()
+    position = models.TextField()
+    description = models.TextField()
 
     def __str__(self):
         return self.name
@@ -13,14 +13,28 @@ class TeamsPost(models.Model):
 class BlogDetails(models.Model):
     heading = models.CharField(max_length=255)
     sub_heading = models.CharField(max_length=255, blank=True, null=True)
-    image_url = models.URLField()
+    # feature_image = models.URLField()
+    feature_image = models.ImageField(upload_to='uploads/')
     image_alt_text = models.CharField(max_length=255, blank=True, null=True)
     seo_title = models.CharField(max_length=255)
-    seo_description = models.TextField()
-    content = models.TextField()
+    meta_description = models.TextField()
+    full_description = models.TextField()
+    tags = models.TextField()
 
     def __str__(self):
         return self.heading
+    
+class BlogComments(models.Model):
+    blog_id = models.IntegerField()
+    name = models.CharField(max_length=255)
+    email_id = models.CharField(max_length=255, blank=True, null=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)
+    # feature_image = models.URLField()
+    # blog_post = models.ForeignKey(BlogDetails, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.heading
+    
+
 
 class PostJobs(models.Model):
     job_title = models.CharField(max_length=255)
