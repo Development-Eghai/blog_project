@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import TeamsPost,BlogDetails,BlogComments, PostJobs
+from .models import TeamsPost,BlogDetails,BlogComments, PostJobs,BlogPostCategory
 
 
 class TeamsPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamsPost
+        fields = '__all__'
+
+class BlogPostCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogPostCategory
         fields = '__all__'
 
 class BlogDetailsSerializer(serializers.ModelSerializer):

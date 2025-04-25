@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (TeamsPostListCreate, TeamsPostRetrieveUpdateDelete,TeamsPostJsonUpdateDelete,
                     BlogDetailsListCreate, BlogDetailsRetrieveUpdateDelete,BlogPostJsonUpdateDelete,
-                    PostJobsListCreate, PostJobsRetrieveUpdateDelete,JobPostJsonUpdateDelete,BlogPostCommentsListCreate
+                    PostJobsListCreate, PostJobsRetrieveUpdateDelete,JobPostJsonUpdateDelete,BlogPostCommentsListCreate,BlogDetailsCategoryFilter,
+                    BlogPostCategoryListCreate,BlogPostCategoryRetrieveUpdateDelete
                     )
 
 urlpatterns = [
@@ -15,5 +16,12 @@ urlpatterns = [
     path('post_jobs/<int:pk>/', PostJobsRetrieveUpdateDelete.as_view(), name='post-jobs-detail'),
     path('job_change/', JobPostJsonUpdateDelete.as_view(), name='post_change'),
     path('blog_comments/', BlogPostCommentsListCreate.as_view(), name='blog_post_comments'),
+    path('category/', BlogPostCategoryListCreate.as_view(), name='category-list-create'),
+    path('category/<int:pk>/', BlogPostCategoryRetrieveUpdateDelete.as_view(), name='category-detail'),
+
+
+    path('blog_filter_test/', BlogDetailsCategoryFilter.as_view(), name='blog-category-filter'),
+
+
     # path('blog_comments/<int:blog_id>/', BlogDetailsRetrieveUpdateDelete.as_view(), name='blog_comment_rd'),
 ]

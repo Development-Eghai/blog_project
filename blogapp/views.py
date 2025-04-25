@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import TeamsPost,BlogDetails,BlogComments, PostJobs
-from .serializers import TeamsPostSerializer,BlogDetailsSerializer,BlogCommentsSerializer, PostJobsSerializer
+from .models import TeamsPost,BlogDetails,BlogComments, PostJobs,BlogPostCategory
+from .serializers import TeamsPostSerializer,BlogDetailsSerializer,BlogCommentsSerializer, PostJobsSerializer,BlogPostCategorySerializer
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
@@ -106,10 +106,25 @@ class TeamsPostRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = TeamsPost.objects.all()
     serializer_class = TeamsPostSerializer
 
+class BlogPostCategoryListCreate(generics.ListCreateAPIView):
+    queryset = BlogPostCategory.objects.all()
+    serializer_class = BlogPostCategorySerializer
 
-class BlogDetailsListCreate(generics.ListCreateAPIView):
-    queryset = BlogDetails.objects.all()
-    serializer_class = BlogDetailsSerializer
+class BlogPostCategoryRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = BlogPostCategory.objects.all()
+    serializer_class = BlogPostCategorySerializer
+
+
+class BlogDetailsListCreate(generics.ListCreateAPIView):    
+     serializer_class = BlogDetailsSerializer
+     def get_queryset(self):
+        queryset = BlogDetails.objects.all()
+        category = self.request.query_params.get('category')
+        if category:
+            queryset = queryset.filter(category=category)
+        return queryset
+    # queryset = BlogDetails.objects.all()
+    # serializer_class = BlogDetailsSerializer
 
 class BlogPostCommentsListCreate(generics.ListCreateAPIView):
     queryset = BlogComments.objects.all()
@@ -125,6 +140,29 @@ class BlogCommentsByBlog(ListAPIView):
     def get_queryset(self):
         blog_id = self.kwargs['blog_id']
         return BlogComments.objects.filter(blog_id=blog_id)  
+    
+class BlogDetailsCategoryFilter(APIView):
+    def get(self, request):        
+        category = request.query_params.get('category')        
+        if category:
+            blogs = BlogDetails.objects.filter(category__iexact=category)
+        else:
+            blogs = BlogDetails.objects.all()
+        serializer = BlogDetailsSerializer(blogs, many=True)        
+        return Response(serializer.data)
+    
+    def post(self, request):
+        category = request.data.get('category')
+        if category:
+            blogs = BlogDetails.objects.filter(category__iexact=category)
+            serializer = BlogDetailsSerializer(blogs, many=True)
+            return Response(serializer.data)
+        else:
+            blogs = BlogDetails.objects.all()
+            serializer = BlogDetailsSerializer(blogs, many=True)
+            return Response(serializer.data)
+            # return Response({"error": "Category not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 # class BlogCommentsByBlog(ListAPIView):
 #     serializer_class = BlogCommentsSerializer
